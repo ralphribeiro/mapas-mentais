@@ -57,5 +57,6 @@ title “Cada padrão descreve um problema que ocorre repetidamente em nosso amb
 **_ Lógica de domínio (Domain Logic)
 ***_ Transaction Script
 ***_ Domain Model
+***_ Table Module
 
 @endmindmap
