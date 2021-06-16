@@ -1,0 +1,54 @@
+@startmindmap
+
+<style>
+node {
+    Padding 5
+    HorizontalAlignment center
+    LineColor brown
+    LineThickness 1.0
+    BackgroundColor white
+    RoundCorner 10
+    FontSize 10
+    MaximumWidth 200
+}
+
+rootNode {
+    FontSize 25
+    FontColor Black
+    Shadowing 0.0
+}
+
+leafNode {
+    LineColor green
+    LineThickness 0.5
+    RoundCorner 10
+    Padding 2
+    BackgroundColor white
+    FontSize 10
+    MaximumWidth 350
+    Margin 3
+    HorizontalAlignment left
+}
+
+arrow {
+    LineStyle 0
+    LineThickness 0.5
+    LineColor green    
+}
+
+</style>
+
+*_ Performance 
+left
+** Tempo de Resposta (Response time):\n    É a quantidade de tempo que leva para o sistema processar uma solicitação externa.
+** Responsividade (Responsiveness):\n    É a rapidez com que o sistema reconhece uma solicitação, em vez de processá-la. Isso é importante em muitos sistemas porque os usuários podem ficar frustrados se um sistema tiver baixa capacidade de resposta, mesmo que seu tempo de resposta seja bom. Se o seu sistema espera durante toda a solicitação, sua capacidade de resposta e tempo de resposta são os mesmos. No entanto, se você indicar que recebeu a solicitação antes de concluí-la, sua capacidade de resposta será melhor. Fornecer uma barra de progresso durante uma cópia de arquivo melhora a capacidade de resposta da interface do usuário, embora não melhore o tempo de resposta.
+** Latência (Latency): \n    É  o tempo mínimo necessário para obter qualquer forma de resposta, mesmo que o trabalho a ser feito seja inexistente. Geralmente é o grande problema em sistemas remotos. Se eu pedir a um programa para não fazer nada, mas para me avisar quando ele não estiver fazendo nada, devo obter uma resposta quase instantânea se o programa for executado no meu laptop. No entanto, se o programa for executado em um computador remoto, posso obter alguns segundos apenas por causa do tempo necessário para que a solicitação e a resposta percorram a rede. Como desenvolvedor de aplicativos, geralmente não posso fazer nada para melhorar a latência. A latência também é a razão pela qual você deve minimizar as chamadas remotas.
+** Taxa de transferência (Throughput):\n    É a quantidade de coisas que você pode fazer em um determinado período de tempo. Nessa terminologia, o desempenho é tanto a taxa de transferência quanto o tempo de resposta - o que for mais importante para você. Da perspectiva do usuário, a capacidade de resposta pode ser mais importante do que o tempo de resposta, portanto, melhorar a capacidade de resposta a um custo de tempo de resposta ou taxa de transferência aumentará o desempenho.
+right
+** Carga (Load): \n    É uma declaração de quanto estresse um sistema está submetido, que pode ser medido em quantos usuários estão atualmente conectados a ele. A carga geralmente é um contexto para alguma outra medição, como um tempo de resposta. Assim, pode-se dizer que o tempo de resposta para alguma solicitação é de 0,5 segundos com 10 usuários e 2 segundos com 20 usuários. 
+** Sensibilidade de carga (Load sensitivity):\n     É uma expressão de como o tempo de resposta varia com a carga. Digamos que o sistema A tenha um tempo de resposta de 0,5 segundo para 10 a 20 usuários e o sistema B tenha um tempo de resposta de 0,2 segundo para 10 usuários que aumenta para 2 segundos para 20 usuários. Neste caso, o sistema A tem uma sensibilidade de carga mais baixa do que o sistema B. Também podemos usar o termo degradação para dizer que o sistema B se degrada mais do que o sistema A.
+** Eficiência (Efficiency): \n   É o desempenho dividido por recursos. Um sistema que obtém 30 tps em duas CPUs é mais eficiente do que um sistema que obtém 40 tps em quatro CPUs idênticas.\nA capacidade de um sistema é uma indicação da carga ou taxa de transferência efetiva máxima. Isso pode ser um máximo absoluto ou um ponto no qual o desempenho cai abaixo de um limite aceitável.
+** Escalabilidade (Scalability): \n    É é uma medida de como a adição de recursos (geralmente hardware) afeta o desempenho. Um sistema escalável é aquele que permite adicionar hardware e obter uma melhoria de desempenho proporcional, como dobrar quantos servidores você tem para dobrar o seu rendimento. Escalabilidade vertical, ou aumento de escala, significa adicionar mais potência a um único servidor, como mais memória. Escalabilidade horizontal, ou expansão, significa adicionar mais servidores.
+
+
+@endmindmap

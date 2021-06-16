@@ -1,0 +1,61 @@
+@startmindmap
+
+<style>
+node {
+    Padding 5
+    BackgroundColor white
+    RoundCorner 10
+    FontSize 12
+    MaximumWidth 200
+}
+
+rootNode {
+    FontSize 25
+    FontColor Black
+    Shadowing 0.0
+}
+
+leafNode {
+    LineColor green
+    LineThickness 0.5
+    RoundCorner 10
+    Padding 2
+    BackgroundColor white
+    FontSize 10
+    MaximumWidth 350
+    Margin 3
+    HorizontalAlignment left
+}
+
+arrow {
+    LineStyle 0
+    LineThickness 0.5
+    LineColor green    
+}
+
+</style>
+ 
+title “Cada padrão descreve um problema que ocorre repetidamente em nosso ambiente e, em seguida,\n descreve o núcleo do solução para esse problema, de forma que você possa usar essa solução um\n milhão de vezes, sem nunca fazer da mesma forma duas vezes”\n    Christopher Alexander
+
+*_ Padrões
+**_ Camadas (Layering):
+***  A parte mais difícil de uma arquitetura em camadas é decidir quais camadas ter e qual deve ser a responsabilidade de cada camada. 
+***_ prós
+****_ Você pode entender uma única camada como um todo coerente sem saber muito sobre as outras camadas.
+****_ Você pode substituir camadas por implementações alternativas dos mesmos serviços básicos.
+****_ Você minimiza a dependência entre camadas.
+****_ As camadas são bons lugaraes para padronização.
+****_ Depois de criar uma camada, você pode usá-la para muitos serviços de nível superior.
+***_ contras
+****_ As camadas encapsulam bem algumas coisas, mas não todas. Como resultado, às vezes você obtém mudanças em cascata.
+****_ Camadas extras podem prejudicar o desempenho. Em cada camada, as coisas normalmente precisam ser transformadas de uma representação para outra.
+***_ 3 principais camadas
+****_ Presentation
+****_ Domain
+****_ Data Source
+
+**_ Lógica de domínio (Domain Logic)
+***_ Transaction Script
+***_ Domain Model
+
+@endmindmap
