@@ -30,7 +30,7 @@ leafNode {
 arrow {
     LineStyle 0
     LineThickness 0.5
-    LineColor green    
+    LineColor purple    
 }
 
 </style>
@@ -38,25 +38,73 @@ arrow {
 title “Cada padrão descreve um problema que ocorre repetidamente em nosso ambiente e, em seguida,\n descreve o núcleo do solução para esse problema, de forma que você possa usar essa solução um\n milhão de vezes, sem nunca fazer da mesma forma duas vezes”\n    Christopher Alexander
 
 *_ Padrões
+
+left
+
 **_ Camadas (Layering):
 ***  A parte mais difícil de uma arquitetura em camadas é decidir quais camadas ter e qual deve ser a responsabilidade de cada camada. 
 ***_ prós
-****_ Você pode entender uma única camada como um todo coerente sem saber muito sobre as outras camadas.
-****_ Você pode substituir camadas por implementações alternativas dos mesmos serviços básicos.
-****_ Você minimiza a dependência entre camadas.
-****_ As camadas são bons lugaraes para padronização.
-****_ Depois de criar uma camada, você pode usá-la para muitos serviços de nível superior.
+**** Você pode entender uma única camada como um todo coerente sem saber muito sobre as outras camadas.
+**** Você pode substituir camadas por implementações alternativas dos mesmos serviços básicos.
+**** Você minimiza a dependência entre camadas.
+**** As camadas são bons lugaraes para padronização.
+**** Depois de criar uma camada, você pode usá-la para muitos serviços de nível superior.
 ***_ contras
-****_ As camadas encapsulam bem algumas coisas, mas não todas. Como resultado, às vezes você obtém mudanças em cascata.
-****_ Camadas extras podem prejudicar o desempenho. Em cada camada, as coisas normalmente precisam ser transformadas de uma representação para outra.
+**** As camadas encapsulam bem algumas coisas, mas não todas. Como resultado, às vezes você obtém mudanças em cascata.
+**** Camadas extras podem prejudicar o desempenho. Em cada camada, as coisas normalmente precisam ser transformadas de uma representação para outra.
 ***_ 3 principais camadas
 ****_ Presentation
 ****_ Domain
 ****_ Data Source
 
-**_ Lógica de domínio (Domain Logic)
+right
+
+**_ Domain Logic
 ***_ Transaction Script
 ***_ Domain Model
 ***_ Table Module
+***_ Service Layer
+
+**_ Data Source Architectural Patterns
+***_ Table Data Gateway
+***_ Row Data Gateway
+***_ Active Record
+***_ Data Mapper
+
+**_ Object-Relational Behavioral Patterns
+***_ Unit of Work
+***_ Identity Map
+***_ Lazy Load
+****_ lazy initialization
+****_ vitual proxy
+****_ ghost
+
+**_ Object-Relational Structural Patterns
+***_ Identity Field
+***_ Foreign Key Mapping
+***_ Association Table Mapping
+***_ Dependent Mapping
+***_ Embedded Value
+***_ Serialized LOB
+***_ Single Table Inheritance
+***_ Class Table Inheritance
+***_ Concrete Table Inheritance
+***_ Inheritance Mappers
+
+**_ Object-Relational Metadata Mapping Patterns
+***_ Metadata Mapping
+***_ Query Object
+***_ Repository
+
+**_ Web Presentation Patterns
+***_ Model View Controller
+***_ Page Controller
+***_ Front Controller
+***_ Template View
+***_ Transform View
+***_ Two Step View
+***_ Application Controller
+
+
 
 @endmindmap
