@@ -105,6 +105,14 @@ right
 ***_ Two Step View
 ***_ Application Controller
 
+**_ Distribution Patterns
+***_ Remote Facade
+***_ Data Transfer Object
 
+**_ Offline Concurrency Patterns
+***_ Optimistic Offline Lock
+***_ Pessimistic Offline Lock
+***_ Coarse-Grained Lock
+***_ Implicit Lock
 
 @endmindmap
