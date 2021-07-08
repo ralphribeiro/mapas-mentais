@@ -115,4 +115,23 @@ right
 ***_ Coarse-Grained Lock
 ***_ Implicit Lock
 
+**_ Session State Patterns
+***_ Client Session State
+***_ Server Session State
+***_ Database Session State
+
+**_ Base Patterns
+***_ Gateway
+***_ Mapper
+***_ Layer Supertype
+***_ Separated Interface
+***_ Registry
+***_ Value Object
+***_ Money
+***_ Special Case
+***_ Plugin
+***_ Service Stub
+***_ Record Set
+
+
 @endmindmap
