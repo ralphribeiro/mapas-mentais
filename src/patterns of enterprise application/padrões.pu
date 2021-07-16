@@ -37,101 +37,186 @@ arrow {
  
 title “Cada padrão descreve um problema que ocorre repetidamente em nosso ambiente e, em seguida,\n descreve o núcleo do solução para esse problema, de forma que você possa usar essa solução um\n milhão de vezes, sem nunca fazer da mesma forma duas vezes”\n    Christopher Alexander
 
-*_ Padrões
-
-left
-
-**_ Camadas (Layering):
-***  A parte mais difícil de uma arquitetura em camadas é decidir quais camadas ter e qual deve ser a responsabilidade de cada camada. 
-***_ prós
-**** Você pode entender uma única camada como um todo coerente sem saber muito sobre as outras camadas.
-**** Você pode substituir camadas por implementações alternativas dos mesmos serviços básicos.
-**** Você minimiza a dependência entre camadas.
-**** As camadas são bons lugaraes para padronização.
-**** Depois de criar uma camada, você pode usá-la para muitos serviços de nível superior.
-***_ contras
-**** As camadas encapsulam bem algumas coisas, mas não todas. Como resultado, às vezes você obtém mudanças em cascata.
-**** Camadas extras podem prejudicar o desempenho. Em cada camada, as coisas normalmente precisam ser transformadas de uma representação para outra.
-***_ 3 principais camadas
-****_ Presentation
-****_ Domain
-****_ Data Source
+*_ Patterns
 
 right
 
 **_ Domain Logic
 ***_ Transaction Script
+**** Organizes business logic by procedures where each procedure handles a single request from the presentation.
+**** The glory of Transaction Script is its simplicity. Organizing logic this way is natural for applications with only a small amount of logic, and it involves very little overhead either in performance or in understanding.
 ***_ Domain Model
+**** An object model of the domain that incorporates both behavior and data.
+**** If you have complicated and everchanging business rules involving validation, calculations, and derivations, chances are that you’ll want an object model to handle them.
 ***_ Table Module
+**** A single instance that handles the business logic for all rows in a database table or view.
+**** Table Module is very much based on table-oriented data, so obviously using it makes sense when you’re accessing tabular data using Record Set. It also puts that data structure very much in the center of the code, so you also want the way you access the data structure to be fairly straightforward.
 ***_ Service Layer
+**** Defines an application’s boundary with a layer of services that establishes a set of available operations and coordinates the application’s response in each operation.
+**** The benefit of Service Layer is that it defines a common set of application operations available to many kinds of clients and it coordinates an application’s response in each operation. The response may involve application logic that needs to be transacted atomically across multiple transactional resources.
 
 **_ Data Source Architectural Patterns
 ***_ Table Data Gateway
+**** An object that acts as a Gateway to a database table. One instance handles all the rows in the table.
+**** An Table Data Gateway is probably the simplest database interface pattern to use, as it maps so nicely onto a database table or record type. It also makes a natural point to encapsulate the precise access logic of the data source. I use it least with Domain Model because I find that Data Mapper gives a better isolation between the Domain Model and the database.
 ***_ Row Data Gateway
+**** An object that acts as a Gateway to a single record in a data source. There is one instance per row.
+**** The choice of Row Data Gateway often takes two steps: first whether to use a gateway at all and second whether to use Row Data Gateway or Table Data Gateway.
 ***_ Active Record
+**** An object that wraps a row in a database table or view, encapsulates the database access, and adds domain logic on that data.
+**** Active Record is a good choice for domain logic that isn’t too complex, such as creates, reads, updates, and deletes. Derivations and validations based on a single record work well in this structure.
 ***_ Data Mapper
+**** A layer of Mappers that moves data between objects and a database while keeping them independent of each other and the mapper itself.
+**** The primary occasion for using Data Mapper is when you want the database schema and the object model to evolve independently. The most common case for this is with a Domain Model. Data Mapper’s primary benefit is that when working on the domain model you can ignore the database, both in design and in the build and testing process. The domain objects have no idea what the database structure is, because all the correspondence is done by the mappers.
 
 **_ Object-Relational Behavioral Patterns
 ***_ Unit of Work
+**** Maintains a list of objects affected by a business transaction and coordinates the writing out of changes and the resolution of concurrency problems.
+**** The fundamental problem that Unit of Work deals with is keeping track of the various objects you’ve manipulated so that you know which ones you need to consider to synchronize your in-memory data with the database. If you’re able to do all your work within a system transaction, the only objects you need to worry about are those you alter.
 ***_ Identity Map
+**** Ensures that each object gets loaded only once by keeping every loaded object in a map. Looks up objects using the map when referring to them.
+**** In general you use an Identity Map to manage any object brought from a database and modified. The key reason is that you don’t want a situation where two in-memory objects correspond to a single database record—you might modify the two records inconsistently and thus confuse the database mapping.\nAnother value in Identity Map is that it acts as a cache for database reads, which means that you can avoid going to the database each time you need some data.
 ***_ Lazy Load
 ****_ lazy initialization
 ****_ vitual proxy
 ****_ ghost
+**** An object that doesn’t contain all of the data you need but knows how to get it.
+**** Deciding when to use Lazy Load is all about deciding how much you want to pull back from the database as you load an object, and how many database calls that will require.
 
 **_ Object-Relational Structural Patterns
 ***_ Identity Field
+**** Saves a database ID field in an object to maintain identity between an in-memory object and a database row.
+**** Use Identity Field when there’s a mapping between objects in memory and rows in a database. This is usually when you use Domain Model or Row Data Gateway. You don’t need this mapping if you’re using Transaction Script, Table Module, or Table Data Gateway.
 ***_ Foreign Key Mapping
+**** Maps an association between objects to a foreign key reference between tables.
+**** A Foreign Key Mapping can be used for almost all associations between classes. The most common case where it isn’t possible is with many-to-many associations. Foreign keys are single values, and first normal form means that you can’t store multiple foreign keys in a single field. Instead you need to use Association Table Mapping.
 ***_ Association Table Mapping
+**** Saves an association as a table with foreign keys to the tables that are linked by the association.
+**** The canonical case for Association Table Mapping is a many-to-many association, since there are really no any alternatives for that situation.\nAssociation Table Mapping can also be used for any other form of association.
 ***_ Dependent Mapping
+**** Has one class perform the database mapping for a child class.
+**** You use Dependent Mapping when you have an object that’s only referred to by one other object, which usually occurs when one object has a collection of dependents. Dependent Mapping is a good way of dealing with the awkward situation where the owner has a collection of references to its dependents but there’s no back pointer.
 ***_ Embedded Value
+**** Maps an object into several fields of another object’s table.
+**** The simplest cases for Embedded Value are the clear, simple Value Objects like money and date range. Since Value Objects don’t have identity, you can create and destroy them easily without worrying about such things as Identity Maps to keep them all in sync. Indeed, all Value Objects should be persisted as Embedded Value, since you would never want a table for them there.
 ***_ Serialized LOB
+**** Saves a graph of objects by serializing them into a single large object (LOB), which it stores in a database field.
+**** This pattern works best when you can chop out a piece of the object model and use it to represent the LOB. Think of a LOB as a way to take a bunch of objects that aren’t likely to be queried from any SQL route outside the application. This graph can then be hooked into the SQL schema.
 ***_ Single Table Inheritance
+**** Represents an inheritance hierarchy of classes as a single table that has columns for all the fields of the various classes.
+**** Single Table Inheritance is one of the options for mapping the fields in an inheritance hierarchy to a relational database.
 ***_ Class Table Inheritance
+**** Represents an inheritance hierarchy of classes with one table for each class.
+**** Class Table Inheritance, Single Table Inheritance and Concrete Table Inheritance are the three alternatives to consider for inheritance mapping.
 ***_ Concrete Table Inheritance
+**** Represents an inheritance hierarchy of classes with one table per concrete class in the hierarchy.
+**** When figuring out how to map inheritance, Concrete Table Inheritance, Class Table Inheritance, and Single Table Inheritance are the alternatives.
 ***_ Inheritance Mappers
+**** A structure to organize database mappers that handle inheritance hierarchies.
+**** This general scheme makes sense for any inheritance-based database mapping. The alternatives involve such things as duplicating superclass mapping code among the concrete mappers and folding the player’s interface into the abstract player mapper class.
 
 **_ Object-Relational Metadata Mapping Patterns
 ***_ Metadata Mapping
+**** Holds details of object-relational mapping in metadata.
+**** Metadata Mapping can greatly reduce the amount of work needed to handle database mapping. However, some setup work is required to prepare the Metadata Mapping framework. Also, while it’s often easy to handle most cases with Metadata Mapping, you can find exceptions that really tangle the metadata.
 ***_ Query Object
+**** An object that represents a database query.
+**** Query Objects are a pretty sophisticated pattern to put together, so most projects don’t use them if they have a handbuilt data source layer. You only really need them when you’re using Domain Model and Data Mapper; you also really need Metadata Mapping to make serious use of them.
 ***_ Repository
+**** Mediates between the domain and data mapping layers using a collection-like interface for accessing domain objects.
+**** Repository reduces the amount of code needed to deal with all the querying that goes on. Repository promotes the Specification pattern (in the form of the criteria object in the examples here), which encapsulates the query to be performed in a pure object-oriented way. Therefore, all the code for setting up a query object in specific cases can be removed. Clients need never think in SQL and can write code purely in terms of objects.
+
+left
 
 **_ Web Presentation Patterns
 ***_ Model View Controller
+**** Splits user interface interaction into three distinct roles.
+**** The value of MVC lies in its two separations. Of these the separation of presentation and model is one of the most important design principles in software, and the only time you shouldn’t follow it is in very simple systems where the model has no real behavior in it anyway.
 ***_ Page Controller
+**** An object that handles a request for a specific page or action on a Web site.
+**** The main decision point is whether to use Page Controller or Front Controller. Of the two, Page Controller is the most familiar to work with and leads to a natural structuring mechanism where particular actions are handled by particular server pages or script classes.
 ***_ Front Controller
+**** A controller that handles all requests for a Web site.
+**** Only one Front Controller has to be configured into the Web server; the Web handler does the rest of the dispatching. This simplifies the configuration of the Web server, which is an advantage if the Web server is awkward to configure. With dynamic commands you can add new commands without changing anything. They also ease porting since you only have to register the handler in a Web-server-specific way.
 ***_ Template View
+**** Renders information into HTML by embedding markers in an HTML page.
+**** The strength of Template View is that it allows you to compose the content of the page by looking at the page structure.
 ***_ Transform View
+**** A view that processes domain data element by element and transforms it into HTML.
+**** Transform View avoids two of the biggest problems with Template View (350). It’s easier to keep the transform focused only on rendering HTML, thus avoiding having too much other logic in the view.
 ***_ Two Step View
+**** Turns domain data into HTML in two steps: first by forming some kind of logical page, then rendering the logical page into HTML.
+**** Two Step View’s key value comes from the separation of first and second stages, allowing you to make global changes more easily. It helps to think of two situations: multiappearance Web applications and single-appearance Web applications.
 ***_ Application Controller
+**** A centralized point for handling screen navigation and the flow of an application.
+**** If the flow and navigation of your application are simple enough so that anyone can visit any screen in pretty much any order, there’s little value in a Application Controller. The strength of an Application Controller comes from definite rules about the order in which pages should be visited and different views depending on the state of objects.
 
 **_ Distribution Patterns
 ***_ Remote Facade
+**** Provides a coarse-grained facade on fine-grained objects to improve efficiency over a network.
+**** Use Remote Facade whenever you need remote access to a fine-grained object model. You gain the advantages of a coarse-grained interface while still keeping the advantage of fine-grained objects, giving you the best of both worlds.
 ***_ Data Transfer Object
+**** An object that carries data between processes in order to reduce the number of method calls.
+**** Use a Data Transfer Object whenever you need to transfer multiple items of data between two processes in a single method call.
 
 **_ Offline Concurrency Patterns
 ***_ Optimistic Offline Lock
+**** Prevents conflicts between concurrent business transactions by detecting a conflict and rolling back the transaction.
+**** Optimistic concurrency management is appropriate when the chance of conflict between any two business transactions is low.
 ***_ Pessimistic Offline Lock
+**** Prevents conflicts between concurrent business transactions by allowing only one business transaction at a time to access data.
+**** Pessimistic Offline Lock is appropriate when the chance of conflict between concurrent sessions is high. A user should never have to throw away work.
 ***_ Coarse-Grained Lock
+**** Locks a set of related objects with a single lock.
+**** The most obvious reason to use a Coarse-Grained Lock is to satisfy business requirements. This is the case when locking an aggregate. Consider a lease object that owns a collection of assets.
 ***_ Implicit Lock
+**** Allows framework or layer supertype code to acquire offline locks.
+**** Implicit Lock should be used in all but the simplest of applications that have no concept of framework. The risk of a single forgotten lock is too great.
 
 **_ Session State Patterns
 ***_ Client Session State
+**** Stores session state on the client.
+**** Client Session State contains a number of advantages. In particular, it reacts well in supporting stateless server objects with maximal clustering and failover resiliency. Of course, if the client fails all is lost, but often the user expects that anyway.
 ***_ Server Session State
+**** Keeps the session state on a server system in a serialized form.
+**** The great appeal of Server Session State is its simplicity. In a number of cases you don’t have to do any programming at all to make this work. Whether you can get away with that depends on if you can get away with the in-memory implementation and, if not, how much help your application server platform gives you.
 ***_ Database Session State
+**** Stores session data as committed data in the database.
+**** Database Session State is one alternative to handling session state; it should be compared with Server Session State and Client Session State.\nThe first aspect to consider with this pattern is performance. You’ll gain by using stateless objects on the server, thus enabling pooling and easy clustering.
 
 **_ Base Patterns
 ***_ Gateway
+**** An object that encapsulates access to an external system or resource.
+**** You should consider Gateway whenever you have an awkward interface to something that feels external. Rather than let the awkwardness spread through the whole system, use a Gateway to contain it. There’s hardly any downside to making the Gateway, and the code elsewhere in the system becomes much easier to read.
 ***_ Mapper
+**** An object that sets up a communication between two independent objects.
+**** Essentially a Mapper decouples different parts of a system. When you want to do this you have a choice between Mapper and Gateway. Gateway is by far the most common choice because it’s much simpler to use a Gateway than a Mapper both in writing the code and in using it later.
 ***_ Layer Supertype
+**** A type that acts as the supertype for all types in its layer.
+**** Use Layer Supertype when you have common features from all objects in a layer. I often do this automatically because I make a lot of use of common features.
 ***_ Separated Interface
+**** Defines an interface in a separate package from its implementation.
+**** You use Separated Interface when you need to break a dependency between two parts of the system.
 ***_ Registry
+**** A well-known object that other objects can use to find common objects and services.
+**** Despite the encapsulation of a method, a Registry is still global data and as such is something I’m uncomfortable using. I almost always see some form of Registry in an application, but I always try to access objects through regular inter-object references instead. Basically, you should only use a Registry as a last resort.
 ***_ Value Object
+**** A small simple object, like money or a date range, whose equality isn’t based on identity.
+**** Treat something as a Value Object when you’re basing equality on something other than an identity. It’s worth considering this for any small object that’s easy to create.
 ***_ Money
+**** Represents a monetary value.
+**** I use Money for pretty much all numeric calculation in object-oriented environments. The primary reason is to encapsulate the handling of rounding behavior, which helps reduce the problems of rounding errors. Another reason to use Money is to make multi-currency work much easier.
 ***_ Special Case
+**** A subclass that provides special behavior for particular cases.
+**** Use Special Case whenever you have multiple places in the system that have the same behavior after a conditional check for a particular class instance, or the same behavior after a null check.
 ***_ Plugin
+**** Links classes during configuration rather than compilation.
+**** Use Plugin whenever you have behaviors that require different implementations based on runtime environment.
 ***_ Service Stub
+**** Removes dependence upon problematic services during testing.
+**** Use Service Stub whenever you find that dependence on a particular service is hindering your development and testing.
 ***_ Record Set
-
+**** An in-memory representation of tabular data.
+**** To my mind the value of Record Set comes from having an environment that relies on it as a common way of manipulating data. A lot of UI tools use Record Set, and that’s a compelling reason to use them yourself.
 
 @endmindmap

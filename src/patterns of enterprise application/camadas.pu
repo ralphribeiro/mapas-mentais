@@ -1,0 +1,17 @@
+@startmindmap
+*_ Camadas (Layering):
+**  A parte mais difícil de uma arquitetura em camadas é decidir quais camadas ter e qual deve ser a responsabilidade de cada camada. 
+**_ prós
+*** Você pode entender uma única camada como um todo coerente sem saber muito sobre as outras camadas.
+*** Você pode substituir camadas por implementações alternativas dos mesmos serviços básicos.
+*** Você minimiza a dependência entre camadas.
+*** As camadas são bons lugaraes para padronização.
+*** Depois de criar uma camada, você pode usá-la para muitos serviços de nível superior.
+**_ contras
+*** As camadas encapsulam bem algumas coisas, mas não todas. Como resultado, às vezes você obtém mudanças em cascata.
+*** Camadas extras podem prejudicar o desempenho. Em cada camada, as coisas normalmente precisam ser transformadas de uma representação para outra.
+**_ 3 principais camadas
+***_ Presentation
+***_ Domain
+***_ Data Source
+@endmindmap
